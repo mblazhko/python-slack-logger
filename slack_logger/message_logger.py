@@ -1,3 +1,4 @@
+from io import BytesIO
 from socket import gethostname
 
 import slack
@@ -179,3 +180,26 @@ class SlackLogger:
 
         response = self.slack.chat_postMessage(**payload)
         return response
+
+    def attach_file(
+            self,
+            text: str,
+            file_name: str,
+            message_ts: str,
+            channel: str,
+            *,
+            title: str = "Traceback",
+            initial_comment: str = "Attached traceback file:",
+    ):
+        file_stream = BytesIO(text.encode('utf-8'))
+        file_stream.name = file_name
+
+        file_response = self.slack.files_upload(
+            channels=channel,
+            file=file_stream,
+            title=title,
+            initial_comment=initial_comment,
+            thread_ts=message_ts
+        )
+
+        return file_response
