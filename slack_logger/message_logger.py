@@ -1,7 +1,7 @@
 from io import BytesIO
 from socket import gethostname
 
-import slack
+from slack_sdk import WebClient
 from yaml import dump
 
 from .utils import bold, code, divider_block, fields_block, mrkdwn_block
@@ -52,7 +52,7 @@ class SlackLogger:
         if self.default_level not in self.COLORS.keys():
             self.default_level = "default"
 
-        self.slack = slack.WebClient(token=self.token)
+        self.slack = WebClient(token=self.token)
 
     def _construct_heading_block(self):
         _heading = "<!channel>"
@@ -194,7 +194,7 @@ class SlackLogger:
         file_stream = BytesIO(text.encode('utf-8'))
         file_stream.name = file_name
 
-        file_response = self.slack.files_upload(
+        file_response = self.slack.files_upload_v2(
             channels=channel,
             file=file_stream,
             title=title,
