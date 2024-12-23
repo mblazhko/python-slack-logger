@@ -195,7 +195,7 @@ class SlackLogger:
         file_stream.name = file_name
 
         file_response = self.slack.files_upload_v2(
-            channels=channel,
+            channel=channel,
             file=file_stream,
             title=title,
             initial_comment=initial_comment,
